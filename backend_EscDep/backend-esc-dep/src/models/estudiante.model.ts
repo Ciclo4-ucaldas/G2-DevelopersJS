@@ -3,6 +3,7 @@ import {Grupo} from './grupo.model';
 
 @model()
 export class Estudiante extends Entity {
+
   @property({
     type: 'string',
     id: true,
@@ -12,45 +13,9 @@ export class Estudiante extends Entity {
 
   @property({
     type: 'string',
-    required: true,
-  })
-  Nombres: string;
-
-  @property({
-    type: 'string',
-    required: true,
-  })
-  Apellidos: string;
-
-  @property({
-    type: 'string',
-    required: true,
-  })
-  NumDocumento: string;
-
-  @property({
-    type: 'date',
-    required: true,
-  })
-  FechaNacimiento: string;
-
-  @property({
-    type: 'string',
     required: false,
   })
   Estado: string;
-
-  @property({
-    type: 'string',
-    required: true,
-  })
-  Correo: string;
-
-  @property({
-    type: 'string',
-    required: false,
-  })
-  Clave: string;
 
   @belongsTo(() => Grupo)
   grupoId: string;

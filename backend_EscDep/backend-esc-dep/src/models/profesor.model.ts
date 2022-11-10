@@ -14,37 +14,7 @@ export class Profesor extends Entity {
     type: 'string',
     required: true,
   })
-  Nombres: string;
-
-  @property({
-    type: 'string',
-    required: true,
-  })
-  Apellidos: string;
-
-  @property({
-    type: 'string',
-    required: true,
-  })
-  NumDocumento: string;
-
-  @property({
-    type: 'date',
-    required: true,
-  })
-  FechaNacimiento: string;
-
-  @property({
-    type: 'string',
-    required: true,
-  })
-  Correo: string;
-
-  @property({
-    type: 'string',
-    required: false,
-  })
-  Clave: string;
+  carnet: string;
 
   @hasMany(() => Grupo)
   grupos: Grupo[];
