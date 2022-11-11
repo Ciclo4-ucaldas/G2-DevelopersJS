@@ -28,7 +28,7 @@ export class Usuario extends Entity {
   NumDocumento: string;
 
   @property({
-    type: 'date',
+    type: 'string',
     required: true,
   })
   FechaNacimiento: string;
