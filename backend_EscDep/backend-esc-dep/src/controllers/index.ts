@@ -9,3 +9,4 @@ export * from './profesor.controller';
 export * from './horario.controller';
 export * from './grupo.controller';
 export * from './estudiante.controller';
+export * from './administrador.controller';

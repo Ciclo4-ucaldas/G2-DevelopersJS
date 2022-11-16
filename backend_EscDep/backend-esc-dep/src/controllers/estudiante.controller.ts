@@ -44,6 +44,8 @@ export class EstudianteController {
     })
     estudiante: Omit<Estudiante, 'Id'>,
   ): Promise<Estudiante> {
+    
+
     return this.estudianteRepository.create(estudiante);
   }
 
