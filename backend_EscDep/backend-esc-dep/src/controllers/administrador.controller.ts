@@ -58,7 +58,7 @@ export class AdministradorController {
     //Enviar clave al correo
     let destino = administrador.Correo;
     let asunto = "REGISTRO en Plataforma Escuela Deportiva"
-    let contenido = `Hola, ${administrador.Nombres} ${administrador.Apellidos}.\n ¡SU REGISTRO EN LA PLATAFORMA HA SIDO EXITOSO! \n Su usuario es el correo electronico registrado en la plataforma: ${administrador.Correo} \n Su contraseña es: ${clave}`
+    let contenido = `Hola, ${administrador.Nombres} ${administrador.Apellidos}. <br/> ¡SU REGISTRO EN LA PLATAFORMA HA SIDO EXITOSO! <br/> Su usuario es el correo electronico registrado en la plataforma: ${administrador.Correo} <br/> Su contraseña es: ${clave}`
     let mensaje = this.AutenticationService.MensajeClave(destino,asunto,contenido);
     if (mensaje){
       return admin;

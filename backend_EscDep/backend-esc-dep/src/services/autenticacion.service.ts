@@ -5,6 +5,7 @@ import generador from 'password-generator';
 import {Llaves} from '../config/Llaves';
 @injectable({scope: BindingScope.TRANSIENT})
 export class AutenticacionService {
+  envio : boolean = false;
   constructor(/* Add @inject to inject parameters */) { }
 
   /*
@@ -21,15 +22,15 @@ export class AutenticacionService {
   }
 
   MensajeClave(correo: string, asunto: string, contenido: string) {
-    let envio = false
+
     fetch(`${Llaves.urlNotif}/email?correo=${correo}&asunto=${asunto}&cuerpo=${contenido}`)
       .then((result: any) => {
         console.log(result);
-        envio = true;
+        this.envio = true;
       }).catch((err: any) => {
         console.log(err);
-        envio = false;
+        return false;
       });
-    return envio;
+    return true;
   }
 }
