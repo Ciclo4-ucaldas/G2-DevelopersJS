@@ -1,3 +1,4 @@
+import {service} from '@loopback/core';
 import {
   Count,
   CountSchema,
@@ -16,14 +17,19 @@ import {
   del,
   requestBody,
   response,
+  HttpErrors,
 } from '@loopback/rest';
+import {serialize} from 'v8';
 import {Estudiante} from '../models';
 import {EstudianteRepository} from '../repositories';
+import {NotificacionService} from '../services';
 
 export class EstudianteController {
   constructor(
     @repository(EstudianteRepository)
     public estudianteRepository : EstudianteRepository,
+    @service(NotificacionService)
+    public NotificacionService : NotificacionService
   ) {}
 
   @post('/estudiantes')
@@ -43,10 +49,23 @@ export class EstudianteController {
       },
     })
     estudiante: Omit<Estudiante, 'Id'>,
-  ): Promise<Estudiante> {
-    
+  ): Promise<Estudiante | any> {
+    //Generar y cifrar clave
+    let clave = this.NotificacionService.GenerarClave();
+    let claveCifrada = this.NotificacionService.CifrarClave(clave);
+    estudiante.Clave = claveCifrada;
+    let estd = await this.estudianteRepository.create(estudiante);
 
-    return this.estudianteRepository.create(estudiante);
+    //Enviar Clave al correo
+    let destino = estudiante.Correo;
+    let asunto = "REGISTRO en Plataforma Escuela Deportiva"
+    let contenido = `Hola, ${estudiante.Nombres} ${estudiante.Apellidos}. <br/> Le damos la bienvenida a la Escuela Deportiva <br/> ¡SU REGISTRO EN LA PLATAFORMA HA SIDO EXITOSO! <br/> Su usuario es el correo electronico registrado en la plataforma: ${estudiante.Correo} <br/> Su contraseña es: ${clave}`
+    let mensaje = this.NotificacionService.MensajeClave(destino,asunto,contenido);
+    if (mensaje){
+      return estd; //Devuelve los datos del estudiante guardados
+    }else{
+      return new HttpErrors[400]("No se pudo registrar en la plataforma");
+    }
   }
 
   @get('/estudiantes/count')

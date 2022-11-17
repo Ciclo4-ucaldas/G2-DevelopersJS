@@ -21,14 +21,16 @@ import {
 } from '@loopback/rest';
 import {Administrador} from '../models';
 import {AdministradorRepository} from '../repositories';
-import {AutenticacionService} from '../services';
+import {AutenticacionService, NotificacionService} from '../services';
 
 export class AdministradorController {
   constructor(
     @repository(AdministradorRepository)
     public administradorRepository : AdministradorRepository,
     @service(AutenticacionService)
-    public AutenticationService: AutenticacionService
+    public AutenticationService: AutenticacionService,
+    @service(NotificacionService)
+    public NotificacionService : NotificacionService
   ) {}
 
   @post('/administradores')
@@ -50,8 +52,8 @@ export class AdministradorController {
     administrador: Omit<Administrador, 'id'>,
   ): Promise<Administrador | any> {
     //Generar y cifrar clave
-    let clave = this.AutenticationService.GenerarClave();
-    let claveCifrada = this.AutenticationService.CifrarClave(clave);
+    let clave = this.NotificacionService.GenerarClave();
+    let claveCifrada = this.NotificacionService.CifrarClave(clave);
     administrador.Clave=claveCifrada;
     let admin = await this.administradorRepository.create(administrador);
 
@@ -59,9 +61,9 @@ export class AdministradorController {
     let destino = administrador.Correo;
     let asunto = "REGISTRO en Plataforma Escuela Deportiva"
     let contenido = `Hola, ${administrador.Nombres} ${administrador.Apellidos}. <br/> ¡SU REGISTRO EN LA PLATAFORMA HA SIDO EXITOSO! <br/> Su usuario es el correo electronico registrado en la plataforma: ${administrador.Correo} <br/> Su contraseña es: ${clave}`
-    let mensaje = this.AutenticationService.MensajeClave(destino,asunto,contenido);
+    let mensaje = this.NotificacionService.MensajeClave(destino,asunto,contenido);
     if (mensaje){
-      return admin;
+      return admin; //Devuelve los datos del administrador guardados
     }else{
       return new HttpErrors[400]("No se pudo registrar en la plataforma");
     }

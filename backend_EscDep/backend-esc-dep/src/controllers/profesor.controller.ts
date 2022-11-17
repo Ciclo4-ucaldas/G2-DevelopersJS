@@ -1,3 +1,4 @@
+import {service} from '@loopback/core';
 import {
   Count,
   CountSchema,
@@ -16,14 +17,18 @@ import {
   del,
   requestBody,
   response,
+  HttpErrors,
 } from '@loopback/rest';
 import {Profesor} from '../models';
 import {ProfesorRepository} from '../repositories';
+import {NotificacionService} from '../services';
 
 export class ProfesorController {
   constructor(
     @repository(ProfesorRepository)
     public profesorRepository : ProfesorRepository,
+    @service(NotificacionService)
+    public NotificacionService : NotificacionService
   ) {}
 
   @post('/profesores')
@@ -43,8 +48,22 @@ export class ProfesorController {
       },
     })
     profesor: Omit<Profesor, 'Id'>,
-  ): Promise<Profesor> {
-    return this.profesorRepository.create(profesor);
+  ): Promise<Profesor | any> {
+    //Generar y cifrar clave
+    let clave = this.NotificacionService.GenerarClave();
+    let claveCifrada = this.NotificacionService.CifrarClave(clave);
+    profesor.Clave=claveCifrada;
+    let prof = await this.profesorRepository.create(profesor);
+
+    let destino = profesor.Correo;
+    let asunto = "REGISTRO en Plataforma Escuela Deportiva"
+    let contenido = `Hola, ${profesor.Nombres} ${profesor.Apellidos}. <br/> ¡SU REGISTRO EN LA PLATAFORMA HA SIDO EXITOSO! <br/> Su usuario es el correo electronico registrado en la plataforma: ${profesor.Correo} <br/> Su contraseña es: ${clave}`
+    let mensaje = this.NotificacionService.MensajeClave(destino,asunto,contenido);
+    if (mensaje){
+      return prof; //Devuelve los datos del estudiante guardados
+    }else{
+      return new HttpErrors[400]("No se pudo registrar en la plataforma");
+    }
   }
 
   @get('/profesores/count')
