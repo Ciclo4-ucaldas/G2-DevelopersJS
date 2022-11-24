@@ -1,3 +1,4 @@
+import {authenticate} from '@loopback/authentication';
 import {service} from '@loopback/core';
 import {
   Count,
@@ -24,6 +25,7 @@ import {Estudiante} from '../models';
 import {EstudianteRepository} from '../repositories';
 import {NotificacionService} from '../services';
 
+@authenticate("admin")
 export class EstudianteController {
   constructor(
     @repository(EstudianteRepository)
@@ -32,6 +34,7 @@ export class EstudianteController {
     public NotificacionService : NotificacionService
   ) {}
 
+  @authenticate("admin","est","prof")
   @post('/estudiantes')
   @response(200, {
     description: 'Estudiante model instance',
@@ -68,6 +71,7 @@ export class EstudianteController {
     }
   }
 
+  @authenticate("admin","prof")
   @get('/estudiantes/count')
   @response(200, {
     description: 'Estudiante model count',
@@ -79,6 +83,7 @@ export class EstudianteController {
     return this.estudianteRepository.count(where);
   }
 
+  @authenticate("admin","prof")
   @get('/estudiantes')
   @response(200, {
     description: 'Array of Estudiante model instances',
@@ -97,6 +102,7 @@ export class EstudianteController {
     return this.estudianteRepository.find(filter);
   }
 
+  @authenticate("admin","estd","prof")
   @patch('/estudiantes')
   @response(200, {
     description: 'Estudiante PATCH success count',
@@ -116,6 +122,7 @@ export class EstudianteController {
     return this.estudianteRepository.updateAll(estudiante, where);
   }
 
+  @authenticate("admin","prof","estd")
   @get('/estudiantes/{id}')
   @response(200, {
     description: 'Estudiante model instance',
@@ -132,6 +139,7 @@ export class EstudianteController {
     return this.estudianteRepository.findById(id, filter);
   }
 
+  @authenticate("admin","estd","prof")
   @patch('/estudiantes/{id}')
   @response(204, {
     description: 'Estudiante PATCH success',
@@ -161,6 +169,7 @@ export class EstudianteController {
     await this.estudianteRepository.replaceById(id, estudiante);
   }
 
+  @authenticate("admin","prof")
   @del('/estudiantes/{id}')
   @response(204, {
     description: 'Estudiante DELETE success',

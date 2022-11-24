@@ -1,3 +1,4 @@
+import {authenticate} from '@loopback/authentication';
 import {
   Count,
   CountSchema,
@@ -19,6 +20,8 @@ import {
 } from '@loopback/rest';
 import {Horario} from '../models';
 import {HorarioRepository} from '../repositories';
+
+@authenticate("admin","prof")
 
 export class HorarioController {
   constructor(
@@ -58,6 +61,7 @@ export class HorarioController {
     return this.horarioRepository.count(where);
   }
 
+  @authenticate.skip()
   @get('/horarios')
   @response(200, {
     description: 'Array of Horario model instances',

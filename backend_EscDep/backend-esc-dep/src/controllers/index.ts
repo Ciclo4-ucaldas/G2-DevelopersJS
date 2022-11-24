@@ -10,3 +10,4 @@ export * from './horario.controller';
 export * from './grupo.controller';
 export * from './estudiante.controller';
 export * from './administrador.controller';
+export * from './usuario.controller';

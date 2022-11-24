@@ -9,6 +9,10 @@ import {RestApplication} from '@loopback/rest';
 import {ServiceMixin} from '@loopback/service-proxy';
 import path from 'path';
 import {MySequence} from './sequence';
+import {AuthenticationComponent, registerAuthenticationStrategy} from '@loopback/authentication';
+import {EstrategiaAdministrador} from './strategies/administrador.strategy';
+import {EstrategiaEstudiante} from './strategies/estudiantes.strategies';
+import {EstrategiaProfesor} from './strategies/profesor.strategie';
 
 export {ApplicationConfig};
 
@@ -40,5 +44,9 @@ export class BackendEscDepApplication extends BootMixin(
         nested: true,
       },
     };
+    registerAuthenticationStrategy(this,EstrategiaAdministrador);
+    registerAuthenticationStrategy(this,EstrategiaEstudiante);
+    registerAuthenticationStrategy(this,EstrategiaProfesor);
+    this.component(AuthenticationComponent)
   }
 }

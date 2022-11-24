@@ -1,3 +1,4 @@
+import {authenticate} from '@loopback/authentication';
 import {service} from '@loopback/core';
 import {
   Count,
@@ -23,6 +24,8 @@ import {Profesor} from '../models';
 import {ProfesorRepository} from '../repositories';
 import {NotificacionService} from '../services';
 
+@authenticate("admin")
+
 export class ProfesorController {
   constructor(
     @repository(ProfesorRepository)
@@ -30,6 +33,7 @@ export class ProfesorController {
     @service(NotificacionService)
     public NotificacionService : NotificacionService
   ) {}
+
 
   @post('/profesores')
   @response(200, {
@@ -95,6 +99,7 @@ export class ProfesorController {
     return this.profesorRepository.find(filter);
   }
 
+  @authenticate("admin","prof")
   @patch('/profesores')
   @response(200, {
     description: 'Profesor PATCH success count',
@@ -114,6 +119,7 @@ export class ProfesorController {
     return this.profesorRepository.updateAll(profesor, where);
   }
 
+  @authenticate("admin","prof")
   @get('/profesores/{id}')
   @response(200, {
     description: 'Profesor model instance',
@@ -130,6 +136,7 @@ export class ProfesorController {
     return this.profesorRepository.findById(id, filter);
   }
 
+  @authenticate("admin","prof")
   @patch('/profesores/{id}')
   @response(204, {
     description: 'Profesor PATCH success',

@@ -14,7 +14,7 @@ export class Administrador extends Usuario {
     type: 'string',
     required: true,
   })
-  especialidad: string;
+  Especialidad: string;
 
 
   constructor(data?: Partial<Administrador>) {

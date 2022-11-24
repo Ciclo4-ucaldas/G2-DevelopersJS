@@ -1,3 +1,4 @@
+import {authenticate} from '@loopback/authentication';
 import {
   Count,
   CountSchema,
@@ -19,6 +20,8 @@ import {
 } from '@loopback/rest';
 import {Grupo} from '../models';
 import {GrupoRepository} from '../repositories';
+
+@authenticate("admin","prof")
 
 export class GrupoController {
   constructor(
@@ -58,6 +61,7 @@ export class GrupoController {
     return this.grupoRepository.count(where);
   }
 
+  @authenticate.skip()
   @get('/grupos')
   @response(200, {
     description: 'Array of Grupo model instances',

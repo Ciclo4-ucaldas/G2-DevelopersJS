@@ -15,7 +15,7 @@ export class Profesor extends Usuario {
     type: 'string',
     required: true,
   })
-  carnet: string;
+  Carnet: string;
 
   @hasMany(() => Grupo)
   grupos: Grupo[];

@@ -4,3 +4,4 @@ export * from './horario.model';
 export * from './grupo.model';
 export * from './usuario.model';
 export * from './administrador.model';
+export * from './credenciales.model';
