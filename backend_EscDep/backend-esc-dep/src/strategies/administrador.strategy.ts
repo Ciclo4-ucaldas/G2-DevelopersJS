@@ -21,6 +21,7 @@ export class EstrategiaAdministrador implements AuthenticationStrategy{
     let token = parseBearerToken(request);
     if(token){
       let datos = this.servicioAutenticacion.ValidarTokenJWT(token);
+      if(datos){
       if(datos.data.rol=="Administrador"){
         let perfil:UserProfile=Object.assign({
           nombre:datos.data.nombre,
@@ -28,8 +29,11 @@ export class EstrategiaAdministrador implements AuthenticationStrategy{
         })
         return perfil;
       }else{
-        throw new HttpErrors[401]("El token no es valido")
+        throw new HttpErrors[401]("El usuario no es valido")
       }
+    }else{
+      throw new HttpErrors[401]("El token no es valido")
+    }
     }else{
       throw new HttpErrors[401]("No se ha incluido un token valido en la solicitud")
     }
